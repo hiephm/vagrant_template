@@ -7,6 +7,10 @@ sudo ln -s /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
 echo ">>>>>>>>>> Config bash..."
 cp /vagrant/conf/.bash* /home/vagrant/
 sudo cp /vagrant/conf/.bash* /root/
+source /home/vagrant/.bash_aliases
+echo ">>>>>>>>>> Essential tools..."
+sudo apt-get update
+sudo apt-get install -y lsb-release
 
 ########## Additional repositories ##########
 echo ">>>>>>>>>> Adding Percona repo..."
@@ -34,6 +38,8 @@ echo ">>>>>>>>>> Installing PHP..."
 sudo apt-get install -y php5 libapache2-mod-php5 php5-mcrypt php5-gd php5-curl php5-mysql php5-xdebug
 sudo cp /vagrant/conf/xdebug.ini /etc/php5/mods-available/
 sudo cp /vagrant/conf/xdebug_cli.ini /etc/php5/cli/conf.d/30-xdebug_cli.ini
+# Disable xdebug by default for web. This alias is in .bash_aliases
+xdebugoff
 
 echo ">>>>>>>>>> Update vhost..."
 sudo cp /vagrant/conf/vhost.conf "/etc/apache2/sites-available/$HOSTNAME.conf"
@@ -71,11 +77,19 @@ sudo chmod +x /usr/local/bin/phpunit
 # wetty:
 echo ">>>>>>>>>> Installing wetty..."
 sudo apt-get install -y npm nodejs-legacy
+echo ">>> npm version before upgrade: `npm -v`"
+sudo npm install -g npm
+sudo npm cache clean -f
+echo ">>> npm version after upgrade: `npm -v`"
 cp -r /vagrant/tools/wetty /home/vagrant/
 echo "Copied to /home/vagrant folder."
 cd /home/vagrant/wetty/
 npm install
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-sudo cp /home/vagrant/wetty/bin/wetty.conf /etc/init/
-sudo start wetty
+# systemd (Debian 8)
+sudo cp /vagrant/tools/wetty/bin/wetty.service /etc/systemd/system/
+sudo systemctl start wetty
+# Upstart only (Ubuntu ~14.04)
+#sudo cp /home/vagrant/wetty/bin/wetty.conf /etc/init/
+#sudo start wetty

@@ -1,4 +1,5 @@
-$vm_box = "minimal/trusty64"
+$vm_box = "minimal/jessie64"  #Debian 8
+#$vm_box = "minimal/trusty64" #Ubuntu 14.04
 
 $vm_memory = 2048
 $vm_cpus = 4

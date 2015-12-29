@@ -1,0 +1,19 @@
+# systemd unit file
+#
+# place in /etc/systemd/system
+# systemctl enable wetty.service
+# systemctl start wetty.service
+
+[Unit]
+Description=Wetty Web Terminal
+After=network.target
+
+[Service]
+User=vagrant
+Group=vagrant
+
+WorkingDirectory=/home/vagrant/wetty
+ExecStart=/usr/bin/node app.js -p 3000 --sshauth "publickey,password"
+
+[Install]
+WantedBy=multi-user.target

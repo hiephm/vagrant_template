@@ -108,4 +108,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
+export PHP_IDE_CONFIG="serverName=CLI"
