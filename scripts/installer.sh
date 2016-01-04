@@ -93,3 +93,12 @@ sudo systemctl start wetty
 # Upstart only (Ubuntu ~14.04)
 #sudo cp /home/vagrant/wetty/bin/wetty.conf /etc/init/
 #sudo start wetty
+
+# wetty:
+echo ">>>>>>>>>> Installing mailcatcher..."
+sudo apt-get install -y gem ruby ruby-dev libsqlite3-dev
+sudo gem install activesupport -v 4.2.5
+sudo gem install mailcatcher -v 0.6.1 --conservative
+# TODO: convert to service
+# TODO: update php sendmail config
+mailcatcher --ip 0.0.0.0
